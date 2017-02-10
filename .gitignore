@@ -40,3 +40,6 @@ configFile.js
 public/js
 public/css
 .idea
+
+# Blocked extensions
+*.js
