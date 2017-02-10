@@ -42,4 +42,4 @@ public/css
 .idea
 
 # Blocked extensions
-*.js
+app/**/*.js
