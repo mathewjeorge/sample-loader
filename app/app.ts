@@ -1,7 +1,7 @@
 /// <reference path="../typings/index.d.ts" />
 
-angular.module('test.app',['routes.app'])
-    .config(function ($logProvider, $compileProvider,environmentalConfig) {
+angular.module('test.app', ['routes.app'])
+    .config(function ($logProvider, $compileProvider, environmentalConfig) {
 
         $logProvider.debugEnabled(environmentalConfig.logDebug);
         $compileProvider.debugInfoEnabled(environmentalConfig.compileDebug);
@@ -9,3 +9,4 @@ angular.module('test.app',['routes.app'])
     });
 
 require('./components');
+require('./services');
