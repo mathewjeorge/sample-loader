@@ -1,6 +1,6 @@
 /// <reference path="../typings/index.d.ts" />
 
-angular.module('test.app', ['routes.app'])
+angular.module('management.app', ['routes.app'])
     .config(function ($logProvider, $compileProvider, environmentalConfig) {
 
         $logProvider.debugEnabled(environmentalConfig.logDebug);

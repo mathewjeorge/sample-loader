@@ -1,3 +1,3 @@
 import {httpService} from "./httpService";
-angular.module('test.app')
+angular.module('management.app')
     .service('httpService', httpService);
