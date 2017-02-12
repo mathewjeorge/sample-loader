@@ -10,3 +10,4 @@ angular.module('test.app', ['routes.app'])
 
 require('./components');
 require('./services');
+require('./directives');
