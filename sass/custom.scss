@@ -7,8 +7,14 @@ $white: #fff;
 // scaling... any units
 $width: 50px;
 
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
 body {
   background-color: $white;
+}
+
+* {
+  font-family: 'Montserrat', sans-serif;
 }
 
 // demo-specific
@@ -75,19 +81,6 @@ body {
   }
 }
 
-@keyframes color {
-  100%,
-  0% {
-    stroke: $red;
-  }
-  40% {
-    stroke: $blue;
-  }
-  66% {
-    stroke: $green;
-  }
-  80%,
-  90% {
-    stroke: $yellow;
-  }
+.page-header {
+  margin: 0
 }

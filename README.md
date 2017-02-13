@@ -9,3 +9,16 @@ Sample material loader using Angular Component
 - npm install
 - typings install
 - gulp dev
+
+## Loader Options
+
+You need to create options object inside your controller. These are the available options you can provide.
+
+### size 
+Size of loader in pixels. Default: 50px
+
+### color
+Hex Color Code. Default: `#0057e7`
+
+### strokeWidth
+Better if you specify between 2-6. Default 2.
