@@ -22,3 +22,11 @@ Hex Color Code. Default: `#0057e7`
 
 ### strokeWidth
 Better if you specify between 2-6. Default 2.
+
+### Example Usage:
+
+Put this loader in section root element
+
+````html
+<div id="sidebar-wrapper" ng-init="$ctrl.go()" loader in-progress="$ctrl.inProgress" color="#65f442" size="30" stroke-width="3">
+````

@@ -55,7 +55,7 @@ class loaderController {
     show: boolean = false;
     name: String = "Jay Shah";
 
-    constructor(private scope: IScope, element: ng.IAugmentedJQuery) {
+    constructor(private scope: IScope) {
         this.hideLoader();
 
         this.scope.$watch("inProgress", (n: Boolean) => {
