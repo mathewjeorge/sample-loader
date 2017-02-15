@@ -23,10 +23,40 @@ Hex Color Code. Default: `#0057e7`
 ### strokeWidth
 Better if you specify between 2-6. Default 2.
 
+### loaderImage 
+Custom loader image url
+
+### loaderClass
+Used for custom loader class - Required if specified custom image
+
+### loaderImageAlt
+Alt text for loader image
+
+### fallbackImage
+Fall back image url in case of provided custom image fails
+
 ### Example Usage:
 
-Put this loader in section root element
-
+#### 1.
 ````html
-<div id="sidebar-wrapper" ng-init="$ctrl.go()" loader in-progress="$ctrl.inProgress" color="#65f442" size="30" stroke-width="3">
+<div id="sidebar-wrapper" ng-init="$ctrl.go()" 
+        loader 
+        in-progress="$ctrl.inProgress" 
+        color="#65f442" 
+        size="30" 
+        stroke-width="3">
+    // content
+</div>
+````
+
+#### 2.
+````html
+<div id="sidebar-wrapper" ng-init="$ctrl.go()" 
+        loader 
+        in-progress="$ctrl.inProgress" 
+        loader-image="{{$ctrl.loaderConfig.loaderImage}}"
+        loader-class="{{$ctrl.loaderConfig.loaderClass}}"
+        fallback-image="{{$ctrl.loaderConfig.loaderImageFallback}}">
+    // content
+</div>
 ````
