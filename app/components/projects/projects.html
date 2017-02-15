@@ -1,3 +1,10 @@
-<div ng-init="$ctrl.go()" class="page-header" loader in-progress="$ctrl.inProgress" color="#4286f4" size="40">
+<div ng-init="$ctrl.go()" 
+    class="page-header" 
+    loader in-progress="$ctrl.inProgress" 
+    color="{{$ctrl.loaderConfig.color}}" 
+    size="{{$ctrl.loaderConfig.size}}" 
+    loader-image="{{$ctrl.loaderConfig.loaderImage}}"
+    loader-class="{{$ctrl.loaderConfig.loaderClass}}"
+>
     <h3>Projects</h3>
 </div>

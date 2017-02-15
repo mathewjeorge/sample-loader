@@ -21,6 +21,7 @@ export class projects implements ng.IComponentOptions {
 class projectsController {
     static $inject = ['httpService', '$rootScope', '$timeout'];
     inProgress: Boolean = true;
+    loaderConfig: Object = {"color": "#4286f4", "size": "40"}; // Laoder config
 
     constructor(public _httpService: httpService, public rootScope: IRootScopeService, public timeout: ITimeoutService) {
     }
