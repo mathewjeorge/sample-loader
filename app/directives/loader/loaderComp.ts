@@ -4,17 +4,17 @@ import IScope = angular.IScope;
 
 /** Loader Possible Attrbutes Interface */
 interface LoaderScope extends ng.IScope {
-    size: String; // size of loader in pixles
-    color: String; // default loader color
-    strokeWidth: String; // width of loader path
-    loaderImage: String; // Custom image for custom loader 
-    loaderImageAlt: String; // Alt text for loader image
-    loaderClass: String; // Used for custom loader class - Required if specified custom image
-    fallbackImage: String; // Fall back which image to use in case of provided image fails
+    size?: string; // size of loader in pixles
+    color?: string; // default loader color
+    strokeWidth?: string; // width of loader path
+    loaderImage?: string; // Custom image for custom loader
+    loaderImageAlt?: string; // Alt text for loader image
+    loaderClass?: string; // Used for custom loader class - Required if specified custom image
+    fallbackImage?: string; // Fall back which image to use in case of provided image fails
 }
 
 export class loader implements ng.IDirective {
-    
+
     /** Loader Constructor */
     constructor($compile: ng.ICompileService) {
         this._$compile = $compile;
@@ -31,10 +31,10 @@ export class loader implements ng.IDirective {
         return directive;
     }
 
-    private _$compile : ng.ICompileService;
-    private loaderDefaultColor: String = "#0057e7"; // Default loader color
-    private loaderSize: String = "50"; // Default loader size
-    private loaderStrokeWidth: String = "2"; // Default loader line width
+    private _$compile: ng.ICompileService;
+    private loaderDefaultColor: string = "#0057e7"; // Default loader color
+    private loaderSize: string = "50"; // Default loader size
+    private loaderStrokeWidth: string = "2"; // Default loader line width
 
     restrict = 'A';
     controllerAs = "$ctrl";
@@ -59,8 +59,8 @@ export class loader implements ng.IDirective {
         let html: any;
 
         /** If specified loader image the prepare html accordingly else assig default loader */
-        if(scope.loaderImage) {
-            if(!scope.loaderClass) {
+        if (scope.loaderImage) {
+            if (!scope.loaderClass) {
                 throw new Error("Loader class is required when specifying custom loader image."); // Throw exception if not provided loader class when using custom image
             } else {
                 html = `<div class="${scope.loaderClass}" ng-show="$ctrl.show">
@@ -89,16 +89,16 @@ class loaderController {
     show: boolean = false;
 
     constructor(private scope: IScope) {
-        this.hideLoader();
+        this.showLoader();
 
         // Keep watch on controller flag. If true then show loader else hide loader
-        this.scope.$watch("inProgress", (n: Boolean) => {
-            if(n === true) {
-                this.showLoader();
-            } else {
-                this.hideLoader();
-            }
-        });
+        /*this.scope.$watch("inProgress", (n: Boolean) => {
+         if (n === true) {
+         this.showLoader();
+         } else {
+         this.hideLoader();
+         }
+         });*/
     }
 
     showLoader() {

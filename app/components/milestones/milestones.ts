@@ -4,6 +4,7 @@ import {httpService} from "../../services/httpService";
 import IScope = angular.IScope;
 import IRootScopeService = angular.IRootScopeService;
 import ITimeoutService = angular.ITimeoutService;
+import {LoaderServiceScope} from "../../services/loaderService";
 export class milestones implements ng.IComponentOptions {
     static componentName = 'milestones';
 
@@ -20,26 +21,30 @@ export class milestones implements ng.IComponentOptions {
 
 class milestonesController {
     static $inject = ['httpService', '$rootScope', '$timeout'];
-    inProgress: Boolean = true;
+
+    loaderConfig: LoaderServiceScope = <LoaderServiceScope>{
+        color: '#f45942',
+        size: '60',
+        strokeWidth: '5',
+        container: 'milestone_cont',
+    };
 
     constructor(public _httpService: httpService, public rootScope: IRootScopeService, public timeout: ITimeoutService) {
     }
 
     go() {
-        // this.rootScope.$broadcast('showLoader');
+        this.rootScope.$broadcast('loader:open', this.loaderConfig);
         this._httpService.get('http://localhost:4000/itwillfail', {})
             .then((response: any) => {
                 console.log(response);
                 this.timeout(() => {
-                    this.inProgress = false;
-                    // this.rootScope.$broadcast('hideLoader');
+                    this.rootScope.$broadcast('loader:close', this.loaderConfig);
                 }, 5000);
             })
             .catch((response: any) => {
                 console.log(response);
                 this.timeout(() => {
-                    this.inProgress = false;
-                    // this.rootScope.$broadcast('hideLoader');
+                    this.rootScope.$broadcast('loader:close', this.loaderConfig);
                 }, 5000);
             });
     }

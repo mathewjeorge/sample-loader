@@ -4,6 +4,7 @@ import {httpService} from "../../services/httpService";
 import IScope = angular.IScope;
 import IRootScopeService = angular.IRootScopeService;
 import ITimeoutService = angular.ITimeoutService;
+import {LoaderServiceScope} from "../../services/loaderService";
 export class projects implements ng.IComponentOptions {
     static componentName = 'projects';
 
@@ -20,27 +21,29 @@ export class projects implements ng.IComponentOptions {
 
 class projectsController {
     static $inject = ['httpService', '$rootScope', '$timeout'];
-    inProgress: Boolean = true;
-    loaderConfig: Object = {"color": "#4286f4", "size": "40"}; // Laoder config
+
+    loaderConfig: LoaderServiceScope = <LoaderServiceScope>{
+        color: '#4286f4',
+        size: '40',
+        container: 'projects_cont',
+    };
 
     constructor(public _httpService: httpService, public rootScope: IRootScopeService, public timeout: ITimeoutService) {
     }
 
     go() {
-        // this.rootScope.$broadcast('showLoader');
+        this.rootScope.$broadcast('loader:open', this.loaderConfig);
         this._httpService.get('http://localhost:4000/itwillfail', {})
             .then((response: any) => {
                 console.log(response);
                 this.timeout(() => {
-                    this.inProgress = false;
-                    // this.rootScope.$broadcast('hideLoader');
+                    this.rootScope.$broadcast('loader:close', this.loaderConfig);
                 }, 3000);
             })
             .catch((response: any) => {
                 console.log(response);
                 this.timeout(() => {
-                    this.inProgress = false;
-                    // this.rootScope.$broadcast('hideLoader');
+                    this.rootScope.$broadcast('loader:close', this.loaderConfig);
                 }, 3000);
             });
     }
