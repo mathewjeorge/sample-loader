@@ -58,9 +58,9 @@ export class loaderService {
         });
 
         this.scope.$on('loader:close', (event, payload: {container: string}) => {
-            if (!payload) payload = {container: 'loader_body'};
-
-            if ('container' in payload) {
+            if (!payload) {
+                payload = {container: 'loader_body'};
+            } else if ('container' in payload) {
                 payload.container = 'loader_' + payload.container;
             } else {
                 payload.container = 'loader_body';
