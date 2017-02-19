@@ -9,7 +9,7 @@ angular.module('management.app', ['routes.app'])
 
     })
     .run((loaderService: loaderService) => {
-        loaderService.listen();
+        loaderService.init({strokeWidth: '15'});
     });
 
 require('./components');

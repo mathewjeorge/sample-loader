@@ -16,14 +16,24 @@ export class loaderService {
     static $inject = ['$rootScope', '$compile'];
 
     activeLoaders: string[] = [];
+    initialized: boolean = false;
+    config: LoaderServiceScope = {};
 
     constructor($scope: ng.IRootScopeService, $compile: ng.ICompileService) {
         this.scope = $scope;
         this.compile = $compile;
     }
 
-    listen() {
+    init(config?: LoaderServiceScope) {
+        if (this.initialized) return false;
+
+        this.initialized = true;
+
+        this.setConfig(config);
+
         this.scope.$on('loader:open', (event, payload: LoaderServiceScope) => {
+            payload = angular.extend(angular.extend({}, this.config), payload);
+
             let loaderEle, loaderId;
 
             if (payload && payload.container) {
@@ -69,5 +79,9 @@ export class loaderService {
             angular.element(document.getElementById(payload.container)).remove();
             this.activeLoaders.splice(this.activeLoaders.indexOf(payload.container), 1);
         });
+    }
+
+    setConfig(config: LoaderServiceScope) {
+        angular.extend(this.config, config);
     }
 }
