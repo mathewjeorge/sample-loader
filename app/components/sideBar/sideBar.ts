@@ -4,7 +4,7 @@ import {httpService} from "../../services/httpService";
 import IScope = angular.IScope;
 import IRootScopeService = angular.IRootScopeService;
 import ITimeoutService = angular.ITimeoutService;
-import {LoaderServiceScope} from "../../services/loaderService";
+import {LoaderConfig} from "../../directives/loader/loaderComp";
 export class sideBar implements ng.IComponentOptions {
     static componentName = 'sideBar';
 
@@ -24,10 +24,11 @@ class sidebarController {
 
     navigationLinks: String[];
 
-    loaderConfig: LoaderServiceScope = <LoaderServiceScope>{
+    loaderConfig: LoaderConfig = {
         color: '#65f442',
         size: '30',
         strokeWidth: '3',
+        container: 'sidebar-wrapper',
     };
 
     constructor(public _httpService: httpService, public rootScope: IRootScopeService, public timeout: ITimeoutService) {

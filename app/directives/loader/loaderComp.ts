@@ -2,8 +2,9 @@
 
 import IScope = angular.IScope;
 
-/** Loader Possible Attrbutes Interface */
-interface LoaderScope extends ng.IScope {
+/** Loader config **/
+export interface LoaderConfig {
+    container?: string; // container of loader
     size?: string; // size of loader in pixles
     color?: string; // default loader color
     strokeWidth?: string; // width of loader path
@@ -11,6 +12,11 @@ interface LoaderScope extends ng.IScope {
     loaderImageAlt?: string; // Alt text for loader image
     loaderClass?: string; // Used for custom loader class - Required if specified custom image
     fallbackImage?: string; // Fall back which image to use in case of provided image fails
+}
+
+/** Loader Possible Attributes Interface */
+interface LoaderScope extends ng.IScope, LoaderConfig {
+
 }
 
 export class loader implements ng.IDirective {
@@ -22,7 +28,7 @@ export class loader implements ng.IDirective {
 
     /** Loader Factory for initiating for loader instance */
     public static Factory() {
-        var directive = ($compile: ng.ICompileService) => {
+        let directive = ($compile: ng.ICompileService) => {
             return new loader($compile);
         };
 
@@ -32,15 +38,11 @@ export class loader implements ng.IDirective {
     }
 
     private _$compile: ng.ICompileService;
-    private loaderDefaultColor: string = "#0057e7"; // Default loader color
-    private loaderSize: string = "50"; // Default loader size
-    private loaderStrokeWidth: string = "2"; // Default loader line width
 
-    restrict = 'A';
+    restrict = 'E';
     controllerAs = "$ctrl";
     controller = loaderController;
     scope = {
-        "inProgress": "=",
         "size": "@",
         "color": "@",
         "strokeWidth": "@",
@@ -50,35 +52,80 @@ export class loader implements ng.IDirective {
         "fallbackImage": "@"
     };
 
+    activeLoaders: string[] = [];
+    config: LoaderConfig = {
+        color: '#0057e7',
+        size: '50',
+        strokeWidth: '2',
+    };
+
     link = (scope: LoaderScope, element: ng.IAugmentedJQuery, attrs: ng.IAttributes) => {
+        if (scope.color) this.config.color = scope.color;
+        if (scope.size) this.config.size = scope.size;
+        if (scope.strokeWidth) this.config.strokeWidth = scope.strokeWidth;
+        if (scope.loaderImage) this.config.loaderImage = scope.loaderImage;
+        if (scope.loaderImageAlt) this.config.loaderImageAlt = scope.loaderImageAlt;
+        if (scope.loaderClass) this.config.loaderClass = scope.loaderClass;
+        if (scope.fallbackImage) this.config.fallbackImage = scope.fallbackImage;
 
-        /** Set loader settings */
-        let size = scope.size ? scope.size : this.loaderSize;
-        let color = scope.color ? scope.color : this.loaderDefaultColor;
-        let strokeWidth = scope.strokeWidth ? scope.strokeWidth : this.loaderStrokeWidth;
-        let html: any;
+        scope.$on('loader:open', (event, payload: LoaderScope) => {
+            let loaderEle, loaderId;
+            let config: LoaderConfig = angular.extend(angular.extend({}, this.config), angular.extend({}, payload));
 
-        /** If specified loader image the prepare html accordingly else assig default loader */
-        if (scope.loaderImage) {
-            if (!scope.loaderClass) {
-                throw new Error("Loader class is required when specifying custom loader image."); // Throw exception if not provided loader class when using custom image
+            if (config && config.container) {
+                loaderEle = angular.element(document.getElementById(config.container));
+                loaderId = 'loader_' + config.container;
             } else {
-                html = `<div class="${scope.loaderClass}" ng-show="$ctrl.show">
-                            <img src="${scope.loaderImage}" alt="${scope.loaderImageAlt ? scope.loaderImageAlt : ''}" onerror="this.src='${scope.fallbackImage ? scope.fallbackImage : ''}'">
-                        </div>`;
+                loaderEle = angular.element(document.body);
+                loaderId = 'loader_body';
             }
-        } else {
-            html = `
-                <div class="showbox" ng-show="$ctrl.show">
-                    <div class="loader" style="width: ${size}px">
+
+            if (this.activeLoaders.indexOf(loaderId) !== -1) {
+                return false;
+            }
+
+            this.activeLoaders.push(loaderId);
+
+            let html: any;
+
+            /** If specified loader image the prepare html accordingly else assig default loader */
+            if (config.loaderImage) {
+                if (!config.loaderClass) {
+                    throw new Error("Loader class is required when specifying custom loader image."); // Throw exception if not provided loader class when using custom image
+                } else {
+                    html = `<div class="${config.loaderClass}" id="${loaderId}">
+                            <img src="${config.loaderImage}" alt="${config.loaderImageAlt ? config.loaderImageAlt : ''}" onerror="this.src='${config.fallbackImage ? config.fallbackImage : ''}'">
+                        </div>`;
+                }
+            } else {
+                html = `
+                <div class="showbox" id="${loaderId}">
+                    <div class="loader" style="width: ${config.size}px">
                         <svg class="circular" viewBox="25 25 50 50">
-                            <circle class="path" style="stroke: ${color}" cx="50" cy="50" r="20" fill="none" stroke-width="${strokeWidth}" stroke-miterlimit="10"/>
+                            <circle class="path" style="stroke: ${config.color}" cx="50" cy="50" r="20" fill="none" stroke-width="${config.strokeWidth}" stroke-miterlimit="10"/>
                         </svg>
                     </div>
                 </div>`;
-        }
-        element.append(html);
-        this._$compile(element.contents())(scope);
+            }
+
+            loaderEle.append(html);
+            this._$compile(html)(scope);
+        });
+
+        scope.$on('loader:close', (event, payload: {container: string}) => {
+            let config: LoaderConfig = {};
+
+            if (!payload) {
+                config = {container: 'loader_body'};
+            } else if ('container' in payload) {
+                config.container = 'loader_' + payload.container;
+            } else {
+                config.container = 'loader_body';
+            }
+
+            angular.element(document.getElementById(config.container)).remove();
+            this.activeLoaders.splice(this.activeLoaders.indexOf(config.container), 1);
+        });
     }
 }
 
@@ -86,26 +133,7 @@ export class loader implements ng.IDirective {
 class loaderController {
     static $inject = ['$scope'];
 
-    show: boolean = false;
-
     constructor(private scope: IScope) {
-        this.showLoader();
 
-        // Keep watch on controller flag. If true then show loader else hide loader
-        /*this.scope.$watch("inProgress", (n: Boolean) => {
-         if (n === true) {
-         this.showLoader();
-         } else {
-         this.hideLoader();
-         }
-         });*/
-    }
-
-    showLoader() {
-        this.show = true;
-    }
-
-    hideLoader() {
-        this.show = false;
     }
 }

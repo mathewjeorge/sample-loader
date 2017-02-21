@@ -4,7 +4,7 @@ import {httpService} from "../../services/httpService";
 import IScope = angular.IScope;
 import IRootScopeService = angular.IRootScopeService;
 import ITimeoutService = angular.ITimeoutService;
-import {LoaderServiceScope} from "../../services/loaderService";
+import {LoaderConfig} from "../../directives/loader/loaderComp";
 export class projects implements ng.IComponentOptions {
     static componentName = 'projects';
 
@@ -22,7 +22,7 @@ export class projects implements ng.IComponentOptions {
 class projectsController {
     static $inject = ['httpService', '$rootScope', '$timeout'];
 
-    loaderConfig: LoaderServiceScope = <LoaderServiceScope>{
+    loaderConfig: LoaderConfig = {
         color: '#4286f4',
         size: '40',
         container: 'projects_cont',

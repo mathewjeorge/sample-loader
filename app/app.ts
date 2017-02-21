@@ -1,6 +1,5 @@
 /// <reference path="../typings/index.d.ts" />
 
-import {loaderService} from "./services/loaderService";
 angular.module('management.app', ['routes.app'])
     .config(function ($logProvider, $compileProvider, environmentalConfig) {
 
@@ -8,8 +7,8 @@ angular.module('management.app', ['routes.app'])
         $compileProvider.debugInfoEnabled(environmentalConfig.compileDebug);
 
     })
-    .run((loaderService: loaderService) => {
-        loaderService.init({strokeWidth: '15'});
+    .run(() => {
+
     });
 
 require('./components');
