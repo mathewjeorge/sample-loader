@@ -27,6 +27,7 @@ body {
   padding: 5%;
   background-color: rgba(255, 255, 255, 0.9);
 }
+
 // end demo-specific
 
 .loader {
@@ -84,3 +85,27 @@ body {
 .page-header {
   margin: 0
 }
+
+// Start: loader message
+.loaderMessageCont {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 5%;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.loaderMessageCont .msg {
+  position: relative;
+  margin: 0 auto;
+  width: $width;
+  &:before {
+    content: '';
+    display: block;
+    padding-top: 100%;
+  }
+}
+
+// End: loader message

@@ -23,8 +23,7 @@ class projectsController {
     static $inject = ['httpService', '$rootScope', '$timeout'];
 
     loaderConfig: LoaderConfig = {
-        color: '#4286f4',
-        size: '40',
+        message: 'Loading...',
         container: 'projects_cont',
     };
 

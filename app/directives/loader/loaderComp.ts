@@ -12,6 +12,8 @@ export interface LoaderConfig {
     loaderImageAlt?: string; // Alt text for loader image
     loaderClass?: string; // Used for custom loader class - Required if specified custom image
     fallbackImage?: string; // Fall back which image to use in case of provided image fails
+    message?: string;
+    messageClass?: string;
 }
 
 /** Loader Possible Attributes Interface */
@@ -49,7 +51,9 @@ export class loader implements ng.IDirective {
         "loaderImage": "@",
         "loaderImageAlt": "@",
         "loaderClass": "@",
-        "fallbackImage": "@"
+        "fallbackImage": "@",
+        "message": "@",
+        "messageClass": "@",
     };
 
     activeLoaders: string[] = [];
@@ -57,6 +61,7 @@ export class loader implements ng.IDirective {
         color: '#0057e7',
         size: '50',
         strokeWidth: '2',
+        messageClass: 'loaderMessageCont',
     };
 
     link = (scope: LoaderScope, element: ng.IAugmentedJQuery, attrs: ng.IAttributes) => {
@@ -67,6 +72,8 @@ export class loader implements ng.IDirective {
         if (scope.loaderImageAlt) this.config.loaderImageAlt = scope.loaderImageAlt;
         if (scope.loaderClass) this.config.loaderClass = scope.loaderClass;
         if (scope.fallbackImage) this.config.fallbackImage = scope.fallbackImage;
+        if (scope.message) this.config.message = scope.message;
+        if (scope.messageClass) this.config.messageClass = scope.messageClass;
 
         scope.$on('loader:open', (event, payload: LoaderScope) => {
             let loaderEle, loaderId;
@@ -88,8 +95,11 @@ export class loader implements ng.IDirective {
 
             let html: any;
 
-            /** If specified loader image the prepare html accordingly else assig default loader */
-            if (config.loaderImage) {
+            if (config.message) {
+                html = `<div class="${config.messageClass}" id="${loaderId}">
+                            <div class="msg">${config.message}</div>
+                        </div>`;
+            } else if (config.loaderImage) { /** If specified loader image the prepare html accordingly else assig default loader */
                 if (!config.loaderClass) {
                     throw new Error("Loader class is required when specifying custom loader image."); // Throw exception if not provided loader class when using custom image
                 } else {
