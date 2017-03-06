@@ -25,6 +25,9 @@ class projectsController {
     loaderConfig: LoaderConfig = {
         message: 'Loading...',
         container: 'projects_cont',
+        cancelEvent: () => {
+            console.log('callback for cancel event in project');
+        }
     };
 
     constructor(public _httpService: httpService, public rootScope: IRootScopeService, public timeout: ITimeoutService) {

@@ -14,6 +14,7 @@ export interface LoaderConfig {
     fallbackImage?: string; // Fall back which image to use in case of provided image fails
     message?: string;
     messageClass?: string;
+    cancelEvent?: Function;
 }
 
 /** Loader Possible Attributes Interface */
@@ -117,6 +118,7 @@ export class loader implements ng.IDirective {
                 if (config.message) {
                     html += `<div class="${config.messageClass}">${config.message}</div>`;
                 }
+                html += `<button type="button" class="btn btn-danger center-block" ng-click="alert('testing')">Cancel</button>`;
                 html += `</div>`;
             }
 
