@@ -58,6 +58,7 @@ export class loader implements ng.IDirective {
     };
 
     activeLoaders: string[] = [];
+    activeLoadersCancelEvents: {} = {};
     config: LoaderConfig = {
         color: '#0057e7',
         size: '50',
@@ -94,6 +95,10 @@ export class loader implements ng.IDirective {
 
             this.activeLoaders.push(loaderId);
 
+            if (payload && payload.cancelEvent) {
+                this.activeLoadersCancelEvents[loaderId] = payload.cancelEvent;
+            }
+
             let html: any = '';
 
             if (config.loaderImage) { /** If specified loader image the prepare html accordingly else assig default loader */
@@ -102,9 +107,15 @@ export class loader implements ng.IDirective {
                 } else {
                     html += `<div class="${config.loaderClass}" id="${loaderId}">
                             <img src="${config.loaderImage}" alt="${config.loaderImageAlt ? config.loaderImageAlt : ''}" onerror="this.src='${config.fallbackImage ? config.fallbackImage : ''}'">`;
+
                     if (config.message) {
                         html += `<div class="${config.messageClass}">${config.message}</div>`;
                     }
+
+                    if (payload && payload.cancelEvent) {
+                        html += `<button type="button" class="btn btn-danger center-block" ng-click="cancelEvent('${loaderId}')">Cancel</button>`;
+                    }
+
                     html += `</div>`;
                 }
             } else {
@@ -118,12 +129,15 @@ export class loader implements ng.IDirective {
                 if (config.message) {
                     html += `<div class="${config.messageClass}">${config.message}</div>`;
                 }
-                html += `<button type="button" class="btn btn-danger center-block" ng-click="alert('testing')">Cancel</button>`;
+
+                if (payload && payload.cancelEvent) {
+                    html += `<button type="button" class="btn btn-danger center-block" ng-click="cancelEvent('${loaderId}')">Cancel</button>`;
+                }
+
                 html += `</div>`;
             }
 
-            loaderEle.append(html);
-            this._$compile(html)(scope);
+            loaderEle.append(this._$compile(html)(scope));
         });
 
         scope.$on('loader:close', (event, payload: {container: string}) => {
@@ -139,7 +153,17 @@ export class loader implements ng.IDirective {
 
             angular.element(document.getElementById(config.container)).remove();
             this.activeLoaders.splice(this.activeLoaders.indexOf(config.container), 1);
+
+            if (config.container in this.activeLoadersCancelEvents) {
+                delete this.activeLoadersCancelEvents[config.container];
+            }
         });
+
+        scope.cancelEvent = (loaderId: string) => {
+            if (loaderId in this.activeLoadersCancelEvents) {
+                this.activeLoadersCancelEvents[loaderId]();
+            }
+        };
     }
 }
 

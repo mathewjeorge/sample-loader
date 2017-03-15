@@ -26,7 +26,7 @@ class projectsController {
         message: 'Loading...',
         container: 'projects_cont',
         cancelEvent: () => {
-            console.log('callback for cancel event in project');
+            this.rootScope.$broadcast('loader:close', this.loaderConfig);
         }
     };
 
