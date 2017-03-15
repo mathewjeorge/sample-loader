@@ -27,6 +27,13 @@ class milestonesController {
         size: '60',
         strokeWidth: '5',
         container: 'milestone_cont',
+        cancelEvent: () => {
+            this.rootScope.$broadcast('loader:close', this.loaderConfig);
+        },
+        reloadEvent: () => {
+            this.rootScope.$broadcast('loader:close', this.loaderConfig);
+            this.go();
+        }
     };
 
     constructor(public _httpService: httpService, public rootScope: IRootScopeService, public timeout: ITimeoutService) {
@@ -45,6 +52,7 @@ class milestonesController {
                 console.log(response);
                 this.timeout(() => {
                     this.rootScope.$broadcast('loader:close', this.loaderConfig);
+                    this.rootScope.$broadcast('loader:error', this.loaderConfig);
                 }, 5000);
             });
     }
@@ -62,6 +70,15 @@ class milestonesController {
                 console.log(response);
                 this.timeout(() => {
                     this.rootScope.$broadcast('loader:close');
+                    this.rootScope.$broadcast('loader:error', {
+                        cancelEvent: () => {
+                            this.rootScope.$broadcast('loader:close');
+                        },
+                        reloadEvent: () => {
+                            this.rootScope.$broadcast('loader:close');
+                            this.goBody();
+                        }
+                    });
                 }, 5000);
             });
     }

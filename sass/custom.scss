@@ -94,3 +94,23 @@ body {
 }
 
 // End: loader message
+
+.loaderError {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 5%;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.loaderError .customCont {
+  position: relative;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.loaderError button, .showbox button {
+  margin: 5px;
+}
